@@ -59,4 +59,4 @@ internal fun Bitmap?.safeRecycle() =
 internal fun Bitmap?.flush() = this?.eraseColor(0)
 
 internal fun Bitmap?.fits(neededW: Int, neededH: Int): Boolean =
-    this?.let { it.height == neededH && it.width == neededW } ?: false
+        this?.let { it.height == neededH && it.width == neededW } == true

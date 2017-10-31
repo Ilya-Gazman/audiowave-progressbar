@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.OvershootInterpolator
+import rm.com.audiowave.R
 
 class AudioWaveView : View {
 
@@ -106,7 +107,7 @@ class AudioWaveView : View {
 
   var isTouched = false
 
-  private val chunksCount: Int
+  val chunksCount: Int
     get() = w / chunkStep
 
   private val chunkStep: Int
@@ -202,25 +203,6 @@ class AudioWaveView : View {
     }
   }
 
-  // Java convenience
-  fun setRawData(raw: ByteArray, callback: OnSamplingListener) {
-    setRawData(raw) { callback.onComplete() }
-  }
-
-  @JvmOverloads
-  fun setRawData(raw: ByteArray, callback: () -> Unit = {}) {
-    MAIN_THREAD.postDelayed({
-      Sampler.downSampleAsync(raw, chunksCount) {
-        scaledData = it
-        callback()
-
-        if (isExpansionAnimated) {
-          animateExpansion()
-        }
-      }
-    }, initialDelay)
-  }
-
   private fun MotionEvent.toProgress() = this@toProgress.x.clamp(0F, w.toFloat()) / w * 100F
 
   private fun redrawData(canvas: Canvas? = waveBitmap?.inCanvas(), factor: Float = 1.0F) {
@@ -235,12 +217,12 @@ class AudioWaveView : View {
       val animatedDiff = (heightDiff * factor).toInt()
 
       canvas.drawRoundRect(
-          rectFOf(
-              left = chunkSpacing / 2 + i * chunkStep,
-              top = centerY - minChunkHeight - animatedDiff,
-              right = chunkSpacing / 2 + i * chunkStep + chunkWidth,
-              bottom = centerY + minChunkHeight + animatedDiff
-          ),
+              rectFOf(
+                      left = chunkSpacing / 2 + i * chunkStep,
+                      top = centerY - minChunkHeight - animatedDiff,
+                      right = chunkSpacing / 2 + i * chunkStep + chunkWidth,
+                      bottom = centerY + minChunkHeight + animatedDiff
+              ),
           chunkRadius.toFloat(),
           chunkRadius.toFloat(),
           wavePaint
@@ -257,7 +239,7 @@ class AudioWaveView : View {
   private fun inflateAttrs(attrs: AttributeSet?) {
     val resAttrs = context.theme.obtainStyledAttributes(
         attrs,
-        R.styleable.AudioWaveView,
+            R.styleable.AudioWaveView,
         0,
         0
     ) ?: return
