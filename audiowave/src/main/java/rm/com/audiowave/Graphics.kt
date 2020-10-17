@@ -38,10 +38,7 @@ internal inline fun Canvas.transform(crossinline init: Canvas.() -> Unit) {
 }
 
 internal fun rectFOf(left: Int, top: Int, right: Int, bottom: Int) = RectF(
-        left.toFloat()
-        , top.toFloat()
-        , right.toFloat()
-        , bottom.toFloat()
+        left.toFloat(), top.toFloat(), right.toFloat(), bottom.toFloat()
 )
 
 internal fun Int.withAlpha(alpha: Int): Int {
